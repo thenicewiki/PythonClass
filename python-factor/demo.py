@@ -20,7 +20,7 @@ class Demo(Tk):
         self._create_layout_()
 
     def _set_window_(self):
-        self.title("Demo")
+        self.title("质因数求解")
         self.geometry("350x390")
         # self.resizable(0, 0)
 
