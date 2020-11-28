@@ -20,7 +20,7 @@ class Demo(Tk):
 
     def _set_windows_(self):
         self.title('计算器')
-        self.geometry('350x390')
+        self.geometry('320x360')
 
     def _create_menu_bar_(self):
         menu_bar = Menu(self)
@@ -62,13 +62,7 @@ class Demo(Tk):
                 Button(frame, text = key, font = tf.Font(size = 30), command = lambda x = key: self.fun(x)).\
                     grid(row = rows, column = cols, ipadx = 5, ipady = 10)
         
-        # 容器框 （LabelFrame）
-        label_frame = Frame(self)
-        label_frame.pack(fill = Y)
-        group = LabelFrame(label_frame, text="Ps.", padx=5, pady=5)
-        group.grid(pady=10)
-        w = Label(group, text='本学习项目由  http://pegasu.cn  出品 \n\nGithub: https://github.com/thenicewiki/PythonClass')
-        w.pack()
+
 
     def fun(self, key):
         if key == '=':

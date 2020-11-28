@@ -85,7 +85,7 @@ class Demo(Tk):
         #         lst.append(i)
         #         num /= i
         #     else:
-        #         i+=
+        #         i+=1
         while num > 1:
             for i in range(2, num + 1):
                 if num % i == 0:
