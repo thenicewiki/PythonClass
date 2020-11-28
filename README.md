@@ -32,9 +32,11 @@ print('随机生成的整数：', lst1, '\n\n偶数：', lst2)
 [![factor0.png](https://s3.ax1x.com/2020/11/28/Dy5YUU.png)](https://imgchr.com/i/Dy5YUU)
 
 
-#### 输入质数提示
+#### 输入1提示
 [![factor1.png](https://s3.ax1x.com/2020/11/28/DyHNcQ.png)](https://imgchr.com/i/DyHNcQ)
 
+#### 输入质数提示
+[![factor2.png](https://s3.ax1x.com/2020/11/28/DyH69U.png)](https://imgchr.com/i/DyH69U)
 
 Main Code
 ```python
