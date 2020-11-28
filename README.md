@@ -15,7 +15,7 @@ print('随机生成的整数：', lst1, '\n\n偶数：', lst2)
 - 使用列表推导式加条件判断去除奇数
 
 
-[![Dy76OA.png](https://s3.ax1x.com/2020/11/28/Dy76OA.png)](https://imgchr.com/i/Dy76OA)
+[![random.png](https://s3.ax1x.com/2020/11/28/Dy76OA.png)](https://imgchr.com/i/Dy76OA)
 
 
 ## 二、简单计算器
@@ -29,7 +29,12 @@ print('随机生成的整数：', lst1, '\n\n偶数：', lst2)
 >  输入一个整数，分解该整数的质因数
 
 
-[![factor.png](https://s3.ax1x.com/2020/11/28/Dy5YUU.png)](https://imgchr.com/i/Dy5YUU)
+[![factor0.png](https://s3.ax1x.com/2020/11/28/Dy5YUU.png)](https://imgchr.com/i/Dy5YUU)
+
+
+#### 输入质数提示
+[![factor1.png](https://s3.ax1x.com/2020/11/28/DyHNcQ.png)](https://imgchr.com/i/DyHNcQ)
+
 
 Main Code
 ```python
