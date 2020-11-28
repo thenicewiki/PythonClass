@@ -14,7 +14,9 @@ print('随机生成的整数：', lst1, '\n\n偶数：', lst2)
 - 使用列表推导式生成随机整数列表
 - 使用列表推导式加条件判断去除奇数
 
-[![random.png](https://s3.ax1x.com/2020/11/28/Dy4oh4.png)](https://imgchr.com/i/Dy4oh4)
+
+[![Dy76OA.png](https://s3.ax1x.com/2020/11/28/Dy76OA.png)](https://imgchr.com/i/Dy76OA)
+
 
 
 
@@ -30,7 +32,6 @@ print('随机生成的整数：', lst1, '\n\n偶数：', lst2)
 [![factor.png](https://s3.ax1x.com/2020/11/28/Dy5YUU.png)](https://imgchr.com/i/Dy5YUU)
 
 Main Code
-
 ```python
 lst = []
 while num > 1:
