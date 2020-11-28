@@ -33,7 +33,7 @@ class Demo(Tk):
         helpmenu = Menu(menu_bar, tearoff = 0)
         menu_bar.add_cascade(label='帮助', menu = helpmenu)
         helpmenu.add_command(label = '操作说明', command = lambda : 1)
-        helpmenu.add_command(label = '关于', command = lambda : 1)
+        helpmenu.add_command(label = '关于', command = self.about)
 
         displaymenu = Menu(menu_bar, tearoff = 0)
         menu_bar.add_cascade(label='显示', menu = displaymenu)
@@ -61,6 +61,14 @@ class Demo(Tk):
                 # lambda 一定是 lambda x = key : self.fun(x) 而不是 lambda : self.fun(key)
                 Button(frame, text = key, font = tf.Font(size = 30), command = lambda x = key: self.fun(x)).\
                     grid(row = rows, column = cols, ipadx = 5, ipady = 10)
+        
+        # 容器框 （LabelFrame）
+        label_frame = Frame(self)
+        label_frame.pack(fill = Y)
+        group = LabelFrame(label_frame, text="Ps.", padx=5, pady=5)
+        group.grid(pady=10)
+        w = Label(group, text='本学习项目由  http://pegasu.cn  出品 \n\nGithub: https://github.com/thenicewiki/PythonClass')
+        w.pack()
 
     def fun(self, key):
         if key == '=':
@@ -96,6 +104,8 @@ class Demo(Tk):
         else:
             self.display.insert(END, key)
         
+    def about(self):
+        tm.showinfo('帮助', '本学习项目由  http://pegasu.cn  出品 \n\nGithub: https://github.com/thenicewiki')
 if "__main__" == __name__:
     app = Demo()
     app.mainloop()

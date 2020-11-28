@@ -59,7 +59,7 @@ class Demo(Tk):
         label_frame.pack(fill = Y)
         group = LabelFrame(label_frame, text="Ps.", padx=5, pady=5)
         group.grid(pady=10)
-        w = Label(group, text='本学习项目由  http://pegasu.cn  出品 \n\nGithub: https://github.com/thenicewiki')
+        w = Label(group, text='本学习项目由  http://pegasu.cn  出品 \n\nGithub: https://github.com/thenicewiki/PythonClass')
         w.pack()
 
     def thread_calculate_factor(self):
@@ -109,7 +109,7 @@ class Demo(Tk):
     def description(self):
         messagebox.showinfo('帮助', '使用方法:\n1.在Entry中数字\n2.确定\n3.Clear Button清空输出\n\n特性:\n\t①使用正则表达式获取Entry中的数字\n\t自动屏蔽空白或其他特殊字符\n\t②运算结果输出保存控制台\n\t③输入0 1提示\n\t④计算后自动清空Entry方便再次计算\n\t')
     def about(self):
-        messagebox.showinfo('帮助', '本学习项目由  http://pegasu.cn  出品 \n\nGithub: https://github.com/thenicewiki')
+        messagebox.showinfo('帮助', '本学习项目由  http://pegasu.cn  出品 \n\nGithub: https://github.com/thenicewiki/PythonClass')
 
 
 if "__main__" == __name__:
