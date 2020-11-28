@@ -18,8 +18,6 @@ print('随机生成的整数：', lst1, '\n\n偶数：', lst2)
 [![Dy76OA.png](https://s3.ax1x.com/2020/11/28/Dy76OA.png)](https://imgchr.com/i/Dy76OA)
 
 
-
-
 ## 二、简单计算器
 > 用Python模拟简单的计算器，实现Python中的基本计算运算，运算符包括：+ - * % ** // ... 输入非法时提示重新输入
 
@@ -29,6 +27,8 @@ print('随机生成的整数：', lst1, '\n\n偶数：', lst2)
 
 ## 四、求质因数
 >  输入一个整数，分解该整数的质因数
+
+
 [![factor.png](https://s3.ax1x.com/2020/11/28/Dy5YUU.png)](https://imgchr.com/i/Dy5YUU)
 
 Main Code
