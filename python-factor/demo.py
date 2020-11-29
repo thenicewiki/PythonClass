@@ -14,6 +14,7 @@ import re
 
 class Demo(Tk):
     def __init__(self):
+        # super()返回了父类对象并调用父类的构造方法
         super().__init__()
         self._set_window_()
         self._create_menu_bar_()
