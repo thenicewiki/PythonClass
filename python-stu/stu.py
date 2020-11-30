@@ -1,3 +1,4 @@
+import pandas as pd
 from tkinter import *
 from tkinter import filedialog, messagebox
 from tkinter.ttk import Scrollbar, Checkbutton, Label, Button, Treeview
@@ -67,39 +68,62 @@ class Demo(Tk):
         scrollBar.pack(side=RIGHT, fill=Y)
 
         self.tree = Treeview(self, show='headings', yscrollcommand=scrollBar.set)#表格
-        self.tree["columns"]=("c1","c2","c3")
+        # self.tree["columns"]=("c1","c2","c3")
 
-        self.tree.column("c1",width=50, anchor = 'center')   #表示列,不显示
-        self.tree.column("c2",width=100, anchor = 'center')
-        self.tree.column("c3",width=100, anchor = 'center')
+        # self.tree.column("c1",width=50, anchor = 'center')   #表示列,不显示
+        # self.tree.column("c2",width=100, anchor = 'center')
+        # self.tree.column("c3",width=100, anchor = 'center')
         
-        self.tree.heading("c1",text="姓名-name")  #显示表头
-        self.tree.heading("c2",text="年龄-age")
-        self.tree.heading("c3",text="身高-tall")
+        # self.tree.heading("c1",text="姓名-name")  #显示表头
+        # self.tree.heading("c2",text="年龄-age")
+        # self.tree.heading("c3",text="身高-tall")
         self.tree.pack(fill=BOTH, ipady = 500)
 
         scrollBar.config(command=self.tree.yview)
-        for i in range(100):
-            self.tree.insert("", i, values=[str(i)]*6)
+        # for i in range(100):
+        #     self.tree.insert("", i, values=[str(i)]*6)
 
         #self.tree.bind('<ButtonRelease-1>', self.showline)
-        self.tree.bind('<Double-Button-1>', self.delete_item) 
+        self.tree.bind('<Double-Button-1>', self.showline) 
 
 
     def showline(self, event=None):
         print(self.tree.selection())
         for item in self.tree.selection():
+
             item_text = self.tree.item(item, 'values')
             print(item_text)
         
-        x = self.tree.get_children()
-        for i in x:
-            self.tree.delete(i)
+        # x = self.tree.get_children()
+        # for i in x:
+        #     self.tree.delete(i)
 
     def delete_item(self, event=None):
         print(self.tree.selection())
         for item in self.tree.selection():
             self.tree.delete(item)
+
+    def add(self, event=None):
+        add_windows = Toplevel(self)
+        add_windows.geometry("800x500")
+        add_windows.resizable(0, 0)
+        add_windows.title('学生信息编辑')
+        
+        frame = Frame(add_windows)
+        frame.pack(fill=Y)
+
+        #for i in self.tree.index():
+        print(self.tree.heading(1, 'text'))
+        print(self.tree.index('I001'))
+        a = self.tree.get_children()
+        print('a == ' , a)
+
+
+        print('add')
+
+    def open_file(self):
+        
+
 
 if "__main__" == __name__:
     app = Demo()
