@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import filedialog, messagebox
 from tkinter.ttk import Scrollbar, Checkbutton, Label, Button, Treeview
 import os
-from style import theme_color, ICONS
+from style import ICONS, INFOS
 
 
 class stu():
@@ -57,7 +57,7 @@ class Demo(Tk):
         right_bar.pack(side=RIGHT, fill=Y)
         for i, icon in enumerate(ICONS):
             icon = PhotoImage(file='img/%s.gif' % icon)
-            btn = Button(shortcut_bar, image=icon, command=self.delete_item)
+            btn = Button(shortcut_bar, image=icon, command=self.open_file)
             btn.pack(side=LEFT)
             self.icon_res.append(icon)
 
@@ -68,7 +68,14 @@ class Demo(Tk):
         scrollBar.pack(side=RIGHT, fill=Y)
 
         self.tree = Treeview(self, show='headings', yscrollcommand=scrollBar.set)#表格
-        # self.tree["columns"]=("c1","c2","c3")
+        index = tuple([str(i) for i in range(len(INFOS))])
+        self.tree["columns"]=index
+
+        # a = tuple([str(i) for i in range(5)])
+        # print(a, type(a))
+        for i, info in zip(index, INFOS):
+            self.tree.column(i, width=len(i)*10, anchor = 'center')
+            self.tree.heading(i,text=info)  #显示表头
 
         # self.tree.column("c1",width=50, anchor = 'center')   #表示列,不显示
         # self.tree.column("c2",width=100, anchor = 'center')
@@ -105,24 +112,78 @@ class Demo(Tk):
 
     def add(self, event=None):
         add_windows = Toplevel(self)
-        add_windows.geometry("800x500")
+        add_windows.geometry("320x400")
         add_windows.resizable(0, 0)
-        add_windows.title('学生信息编辑')
+        add_windows.title('添加新的学生')
         
         frame = Frame(add_windows)
         frame.pack(fill=Y)
 
-        #for i in self.tree.index():
-        print(self.tree.heading(1, 'text'))
-        print(self.tree.index('I001'))
-        a = self.tree.get_children()
-        print('a == ' , a)
+        self.entryList=locals()
+
+        for i, info in enumerate(INFOS):
+            name = info
+            Label(frame, text=info+' : ').grid(row=i, column=0, pady = 5)
+            self.entryList[name] = Entry(frame)
+            self.entryList[name].grid(row=i, column=1, pady=5)
+        
+        # self.entryList['学号'].insert(0, 'helloworld')
+        # print(self.entryList['学号'].get())
+
+        frame_btn = Frame(add_windows)
+        frame_btn.pack(fill=Y)
+        Button(frame_btn, text='添加', command=lambda : update()).grid(row=0, column=0, pady=5)
+        Button(frame_btn, text='清空', command=lambda : clear()).grid(row=0, column=1, pady=5)
+        Button(frame_btn, text='取消', command=lambda : exit()).grid(row=0, column=2, pady=5)
+        
+        def exit():
+            add_windows.destroy()
+        
+        def clear():
+            for info in INFOS:
+                self.entryList[info].delete(0, END)
+        
+        def update():
+            DATAS = []
+            for info in INFOS:
+                data = self.entryList[info].get()
+                DATAS.append(data)
+            
+            for i in DATAS:
+                if i == '':
+                    messagebox.showwarning(title='警告', message='输入空白')
+                    clear()
+                    return
+            
+            self.tree.insert("", END, values=DATAS)
+            print(DATAS)
 
 
-        print('add')
 
     def open_file(self):
+        input_file = filedialog.askopenfilename(
+            filetypes=[("所有文件", "*.*"), ("文本文档", "*.xlsx")])
         
+        if input_file:
+            print(input_file, type(input_file))
+
+        def read_excel(*file):
+            df = pd.DataFrame(columns=pd.read_excel(file[0]).columns) # 读取Excel表表头 File[0]：其中一个文件 
+            print(df)
+            
+            for i in file:
+                df = df.append(pd.read_excel(i), ignore_index=True)
+            df.to_excel('my.xlsx')
+            print(df)
+            return df
+    
+        df = read_excel(input_file)
+
+        for i in df.iloc:
+            data = i.tolist()
+            print(data)
+            self.tree.insert("", END, values=data)
+
 
 
 if "__main__" == __name__:
