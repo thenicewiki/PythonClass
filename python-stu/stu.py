@@ -45,6 +45,8 @@ class Demo(Tk):
         file_menu.add_command(label='delete_selected_item', accelerator='Ctrl+Q', command=self.delete_item)
         file_menu.add_command(label='clear_all', accelerator='Ctrl+Q', command=self.clear_all)
         file_menu.add_command(label='delete_item', accelerator='Ctrl+Q', command=self.delete_item)
+        file_menu.add_command(label='init_demo', accelerator='Ctrl+Q', command=self.init_demo)
+
 
 
 
@@ -108,7 +110,11 @@ class Demo(Tk):
             print(item + ' : ', end = ' ')
             print('deleted', end=' ')
         print('\n-------------items had been cleared:END-------------')
-        
+    
+    def init_demo(self):
+        self.clear_all()
+        self.DATAS = pd.DataFrame(columns=INFOS)
+        print('---------------demo inited----------------')
 
 
     def delete_item(self, event=None):
