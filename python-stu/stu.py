@@ -6,16 +6,6 @@ import os
 from style import ICONS, INFOS
 
 
-class stu():
-    def __init__(self):
-        self.name = ""
-        self.num = 0
-        self.grade = 0
-
-    def _show_stu_(self):
-        print(self.name, self.num, self.grade)
-
-
 class Demo(Tk):
     icon_res = []
     file_name = None
@@ -26,6 +16,9 @@ class Demo(Tk):
         self._create_menu_bar_()
         self._create_shortcut_bar_()
         self._create_body_()
+        self.DATAS = pd.DataFrame(columns=INFOS)
+
+
 
     def _set_windows_(self):
         self.title('学生成绩管理系统')
@@ -39,10 +32,24 @@ class Demo(Tk):
         menu_bar = Menu(self)
 
         file_menu = Menu(menu_bar, tearoff=0)
-        file_menu.add_command(label='New', accelerator='Ctrl+N', command=lambda: 1)
-        file_menu.add_command(label='Open', accelerator='Ctrl+O', command=lambda: 1)
+        file_menu.add_command(label='add', accelerator='Ctrl+N', command=self.add)
+        file_menu.add_command(label='Osave_to_file', accelerator='Ctrl+O', command=self.save_to_file)
         #file_menu.add_separator()
-        file_menu.add_command(label='Exit', accelerator='Ctrl+Q')
+        file_menu.add_command(label='Exit', accelerator='Ctrl+Q', command=self.edit)
+        file_menu.add_command(label='Search', accelerator='Ctrl+Q', command=self.search)
+        file_menu.add_command(label='Total', accelerator='Ctrl+Q', command=self.total)
+        file_menu.add_command(label='save_to_DATAS', accelerator='Ctrl+Q', command=self.save_to_DATAS)
+        file_menu.add_command(label='Average', accelerator='Ctrl+Q', command=self.average)
+        file_menu.add_command(label='open_file', accelerator='Ctrl+Q', command=self.open_file)
+        file_menu.add_command(label='add', accelerator='Ctrl+Q', command=self.add)
+        file_menu.add_command(label='delete_selected_item', accelerator='Ctrl+Q', command=self.delete_item)
+        file_menu.add_command(label='clear_all', accelerator='Ctrl+Q', command=self.clear_all)
+        file_menu.add_command(label='delete_item', accelerator='Ctrl+Q', command=self.delete_item)
+
+
+
+
+
 
         menu_bar.add_cascade(label='File', menu=file_menu)
         
@@ -57,7 +64,7 @@ class Demo(Tk):
         right_bar.pack(side=RIGHT, fill=Y)
         for i, icon in enumerate(ICONS):
             icon = PhotoImage(file='img/%s.gif' % icon)
-            btn = Button(shortcut_bar, image=icon, command=self.open_file)
+            btn = Button(shortcut_bar, image=icon, command= lambda : self.open_file('new.xlsx'))
             btn.pack(side=LEFT)
             self.icon_res.append(icon)
 
@@ -71,44 +78,46 @@ class Demo(Tk):
         index = tuple([str(i) for i in range(len(INFOS))])
         self.tree["columns"]=index
 
-        # a = tuple([str(i) for i in range(5)])
-        # print(a, type(a))
         for i, info in zip(index, INFOS):
             self.tree.column(i, width=len(i)*10, anchor = 'center')
             self.tree.heading(i,text=info)  #显示表头
 
-        # self.tree.column("c1",width=50, anchor = 'center')   #表示列,不显示
-        # self.tree.column("c2",width=100, anchor = 'center')
-        # self.tree.column("c3",width=100, anchor = 'center')
-        
-        # self.tree.heading("c1",text="姓名-name")  #显示表头
-        # self.tree.heading("c2",text="年龄-age")
-        # self.tree.heading("c3",text="身高-tall")
         self.tree.pack(fill=BOTH, ipady = 500)
 
+        # 将滚动条绑定至Treeview
         scrollBar.config(command=self.tree.yview)
-        # for i in range(100):
-        #     self.tree.insert("", i, values=[str(i)]*6)
 
-        #self.tree.bind('<ButtonRelease-1>', self.showline)
+        # 快捷键相关设置
+        # 函数参数需要有event=None
         self.tree.bind('<Double-Button-1>', self.showline) 
 
 
     def showline(self, event=None):
         print(self.tree.selection())
         for item in self.tree.selection():
-
             item_text = self.tree.item(item, 'values')
             print(item_text)
         
-        # x = self.tree.get_children()
-        # for i in x:
-        #     self.tree.delete(i)
+
+    def clear_all(self):
+        print('-------------follow item will be cleared:BEG-------------')
+        print(self.tree.get_children())
+        print('\n')
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+            print(item + ' : ', end = ' ')
+            print('deleted', end=' ')
+        print('\n-------------items had been cleared:END-------------')
+        
+
 
     def delete_item(self, event=None):
+        print('-------------Your selection:BEG-------------')
         print(self.tree.selection())
         for item in self.tree.selection():
             self.tree.delete(item)
+        print('-------------Your selection cleared:END-------------')
+        
 
     def add(self, event=None):
         add_windows = Toplevel(self)
@@ -126,9 +135,6 @@ class Demo(Tk):
             Label(frame, text=info+' : ').grid(row=i, column=0, pady = 5)
             self.entryList[name] = Entry(frame)
             self.entryList[name].grid(row=i, column=1, pady=5)
-        
-        # self.entryList['学号'].insert(0, 'helloworld')
-        # print(self.entryList['学号'].get())
 
         frame_btn = Frame(add_windows)
         frame_btn.pack(fill=Y)
@@ -149,41 +155,139 @@ class Demo(Tk):
                 data = self.entryList[info].get()
                 DATAS.append(data)
             
-            for i in DATAS:
+            for i in DATAS[:-1]:
                 if i == '':
                     messagebox.showwarning(title='警告', message='输入空白')
                     clear()
                     return
             
             self.tree.insert("", END, values=DATAS)
-            print(DATAS)
 
 
 
-    def open_file(self):
-        input_file = filedialog.askopenfilename(
-            filetypes=[("所有文件", "*.*"), ("文本文档", "*.xlsx")])
-        
-        if input_file:
-            print(input_file, type(input_file))
-
-        def read_excel(*file):
-            df = pd.DataFrame(columns=pd.read_excel(file[0]).columns) # 读取Excel表表头 File[0]：其中一个文件 
-            print(df)
+    def open_file(self, options=None):
+        if options:
+            input_file = options
+        else:
+            input_file = filedialog.askopenfilename(
+                filetypes=[("所有文件", "*.*"), ("文本文档", "*.xlsx")])
             
-            for i in file:
-                df = df.append(pd.read_excel(i), ignore_index=True)
-            df.to_excel('my.xlsx')
+            if input_file:
+                print('-----------------成功导入文件:', input_file, type(input_file), '---------------')
+
+        def read_excel(file):
+            df = pd.read_excel(file)
+            print('---------------reading excel!-----------------')
             print(df)
+            print('---------------read excel done!-----------------')
             return df
-    
+
         df = read_excel(input_file)
 
+        # input data to Treeview
+        print('---------------inputing to TreeView!-----------------')
         for i in df.iloc:
             data = i.tolist()
+            # 若导入的文件中缺少数据，则缺少的数据用空补上
+            for i in range(len(INFOS)-len(data)):
+                data.append('')
+            # 打印测试
             print(data)
             self.tree.insert("", END, values=data)
+        print('---------------input to TreeView done!-----------------')
+        
 
+        
+    
+    def save_to_DATAS(self):
+        print('---------------saving to DATAS!-----------------')
+        self.DATAS = pd.DataFrame(columns=INFOS)
+        indexs = self.tree.get_children()
+        for i in indexs:
+            value = self.tree.item(i, 'values')
+            print(value)
+            self.DATAS.loc[len(self.DATAS)] = list(value)
+        print('---------------save to DATAS done!-----------------')
+
+
+    def save_to_file(self):
+        self.save_to_DATAS()
+        outputfile = 'new.xlsx'
+        self.DATAS.to_excel(outputfile, index=FALSE)
+        print('---------------------------save to file done!---------------------------------')
+
+    def edit(self):
+        item = self.tree.selection()
+
+        self.tree.set(item, 0, value='helloworld')
+
+
+    def search(self):
+        search_windows = Toplevel(self)
+        search_windows.title('查找文本')
+        search_windows.transient(self)
+        search_windows.resizable(0, 0)
+
+        Label(search_windows, text='查找全部:').grid(row=0, column=0, sticky=E)
+        search_entry = Entry(search_windows, width=25)
+        search_entry.grid(row=0, column=1, padx=2, pady=20, sticky='we')
+        search_entry.focus_set()
+
+        Button(search_windows, text='查找', command=lambda: search_result()).grid(row=0, column=2, sticky=E+W, padx=2, pady=2)
+
+
+
+        def search_result():
+            indexs = self.tree.get_children()
+            search_data = search_entry.get()
+            print(search_data, type(search_data))
+
+            for i, index in enumerate(indexs):
+                values = self.tree.item(index, 'values')
+                print(values, end=' ')
+                for value in list(values)[:2]:
+                    if search_data in value:
+                        print('Found')
+                        self.tree.selection_set(index)
+                        self.tree.yview_moveto(i/len(indexs))
+                        return
+                    else:
+                        print('No Found')
+
+        # 选择
+        # self.tree.selection_set('I001')
+        # self.tree.yview_moveto(1)
+
+        # 取消选择
+        # self.tree.selection_remove('I001')
+
+
+    def total(self):
+        self.save_to_DATAS()
+        temp = self.DATAS[['成绩A', '成绩B', '成绩C']].astype('int')
+        self.DATAS['总分'] = temp.sum(axis=1)
+        print('---------------------------Total calculate done!-----------------------------')
+        print(self.DATAS)
+        print('---------------------------Total calculate done!-----------------------------')
+
+        # 删除Treeview中所有元素
+        for index in self.tree.get_children():
+            self.tree.delete(index)
+        # 插入DATAS中的元素到TreeView中
+        for i in self.DATAS.iloc:
+            data = i.tolist()
+            data = data if len(data) == len(INFOS) else data.append('')
+            self.tree.insert("", END, values=data)
+
+
+
+    def average(self):
+        self.total()
+        temp = self.DATAS[['总分']].astype('float64')
+        av = temp.mean(axis=0)
+        print('---------------------------AV-----------------------------')
+        print('平均分：', float(av))
+        print('---------------------------AV-----------------------------')
 
 
 if "__main__" == __name__:
