@@ -46,6 +46,8 @@ class Demo(Tk):
         file_menu.add_command(label='clear_all', accelerator='Ctrl+Q', command=self.clear_all)
         file_menu.add_command(label='delete_item', accelerator='Ctrl+Q', command=self.delete_item)
         file_menu.add_command(label='init_demo', accelerator='Ctrl+Q', command=self.init_demo)
+        file_menu.add_command(label='sort_as_total', accelerator='Ctrl+Q', command=self.sort_as_total)
+
 
 
 
@@ -295,6 +297,20 @@ class Demo(Tk):
         print('平均分：', float(av))
         print('---------------------------AV-----------------------------')
 
+    def sort_as_total(self):
+        self.DATAS.sort_values(by='总分', ascending=False, inplace=True)
+        print('--------------------sorting values!----------------')
+        print(self.DATAS)
+        print('--------------------sort values done!--------------')
+        
+        # drop 清洗列表 去掉NaN的行 
+        self.DATAS.reset_index(drop=True, inplace=True)
+        print('--------------------cleaning datas!----------------')
+        print(self.DATAS)
+        print('--------------------clean datas done!--------------')
+
+        # Text
+        self.DATAS.to_excel('text.xlsx', index=False)
 
 if "__main__" == __name__:
     app = Demo()
