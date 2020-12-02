@@ -5,6 +5,10 @@ from tkinter.ttk import Scrollbar, Checkbutton, Label, Button, Treeview
 import os
 from style import ICONS, INFOS
 
+# 退出Button
+# 按学号排序
+# Logo Fun
+
 
 class Demo(Tk):
     icon_res = []
@@ -33,20 +37,19 @@ class Demo(Tk):
 
         file_menu = Menu(menu_bar, tearoff=0)
         file_menu.add_command(label='add', accelerator='Ctrl+N', command=self.add)
-        file_menu.add_command(label='Osave_to_file', accelerator='Ctrl+O', command=self.save_to_file)
-        #file_menu.add_separator()
-        file_menu.add_command(label='Exit', accelerator='Ctrl+Q', command=self.edit)
-        file_menu.add_command(label='Search', accelerator='Ctrl+Q', command=self.search)
-        file_menu.add_command(label='Total', accelerator='Ctrl+Q', command=self.total)
-        file_menu.add_command(label='save_to_DATAS', accelerator='Ctrl+Q', command=self.save_to_DATAS)
-        file_menu.add_command(label='Average', accelerator='Ctrl+Q', command=self.average)
-        file_menu.add_command(label='open_file', accelerator='Ctrl+Q', command=self.open_file)
-        file_menu.add_command(label='add', accelerator='Ctrl+Q', command=self.add)
-        file_menu.add_command(label='delete_selected_item', accelerator='Ctrl+Q', command=self.delete_item)
-        file_menu.add_command(label='clear_all', accelerator='Ctrl+Q', command=self.clear_all)
-        file_menu.add_command(label='delete_item', accelerator='Ctrl+Q', command=self.delete_item)
-        file_menu.add_command(label='init_demo', accelerator='Ctrl+Q', command=self.init_demo)
-        file_menu.add_command(label='sort_as_total', accelerator='Ctrl+Q', command=self.sort_as_total)
+        file_menu.add_command(label='Osave_to_file', command=self.save_to_file)
+        file_menu.add_command(label='Exit', command=self.edit)
+        file_menu.add_command(label='Search', command=self.search)
+        file_menu.add_command(label='Total', command=self.total)
+        file_menu.add_command(label='save_to_DATAS', command=self.save_to_DATAS)
+        file_menu.add_command(label='Average', command=self.average)
+        file_menu.add_command(label='open_file', command=self.open_file)
+        file_menu.add_command(label='add', command=self.add)
+        file_menu.add_command(label='delete_selected_item', command=self.delete_item)
+        file_menu.add_command(label='clear_all', command=self.clear_all)
+        file_menu.add_command(label='delete_item', command=self.delete_item)
+        file_menu.add_command(label='init_demo', command=self.init_demo)
+        file_menu.add_command(label='sort_as_total', command=self.sort_as_total)
 
 
 
@@ -66,11 +69,12 @@ class Demo(Tk):
 
         right_bar = Frame(self, width=25, background='#E1B14C')
         right_bar.pack(side=RIGHT, fill=Y)
+
         for i, icon in enumerate(ICONS):
-            icon = PhotoImage(file='img/%s.gif' % icon)
-            btn = Button(shortcut_bar, image=icon, command= lambda : self.open_file('new.xlsx'))
+            icon_img = PhotoImage(file='img/%s.gif' % icon)
+            btn = Button(shortcut_bar, image=icon_img, command= lambda x = icon : self._shortcut_action_(x))
             btn.pack(side=LEFT)
-            self.icon_res.append(icon)
+            self.icon_res.append(icon_img)
 
 
     def _create_body_(self):
@@ -93,7 +97,37 @@ class Demo(Tk):
 
         # 快捷键相关设置
         # 函数参数需要有event=None
-        self.tree.bind('<Double-Button-1>', self.showline) 
+        self.tree.bind('<Double-Button-1>', self.edit) 
+    
+    
+    # 响应快捷菜单
+    def _shortcut_action_(self, type):
+
+        if type == "open_file":
+            self.open_file()
+        elif type == "add":
+            self.add()
+        elif type == "edit":
+            self.edit()
+        elif type == "save_file":
+            self.save_to_file()
+        elif type == "save_DATAS":
+            self.save_to_DATAS()
+        elif type == "delete":
+            self.delete_item()
+        elif type == "clear_all":
+            self.clear_all()
+        elif type == "search":
+            self.search()
+        elif type == "total":
+            self.total()
+        elif type == "average":
+            self.average()
+        elif type == "sort":
+            self.sort_as_total()
+        elif type == "about":
+            self.about
+
 
 
     def showline(self, event=None):
@@ -129,7 +163,9 @@ class Demo(Tk):
 
     def add(self, event=None):
         add_windows = Toplevel(self)
-        add_windows.geometry("320x400")
+        scn_width, scn_height = self.maxsize()
+        wm_val = '320x400+%d+%d' % ((scn_width - 320) / 2, (scn_height - 400) / 2)
+        add_windows.geometry(wm_val)
         add_windows.resizable(0, 0)
         add_windows.title('添加新的学生')
         
@@ -139,10 +175,9 @@ class Demo(Tk):
         self.entryList=locals()
 
         for i, info in enumerate(INFOS):
-            name = info
             Label(frame, text=info+' : ').grid(row=i, column=0, pady = 5)
-            self.entryList[name] = Entry(frame)
-            self.entryList[name].grid(row=i, column=1, pady=5)
+            self.entryList[info] = Entry(frame)
+            self.entryList[info].grid(row=i, column=1, pady=5)
 
         frame_btn = Frame(add_windows)
         frame_btn.pack(fill=Y)
@@ -150,13 +185,7 @@ class Demo(Tk):
         Button(frame_btn, text='清空', command=lambda : clear()).grid(row=0, column=1, pady=5)
         Button(frame_btn, text='取消', command=lambda : exit()).grid(row=0, column=2, pady=5)
         
-        def exit():
-            add_windows.destroy()
-        
-        def clear():
-            for info in INFOS:
-                self.entryList[info].delete(0, END)
-        
+
         def update():
             DATAS = []
             for info in INFOS:
@@ -170,8 +199,15 @@ class Demo(Tk):
                     return
             
             self.tree.insert("", END, values=DATAS)
+        
 
+        def clear():
+            for info in INFOS:
+                self.entryList[info].delete(0, END)
+        
 
+        def exit():
+            add_windows.destroy()
 
     def open_file(self, options=None):
         if options:
@@ -217,6 +253,7 @@ class Demo(Tk):
             self.DATAS.loc[len(self.DATAS)] = list(value)
         print('---------------save to DATAS done!-----------------')
 
+    
 
     def save_to_file(self):
         self.save_to_DATAS()
@@ -224,18 +261,78 @@ class Demo(Tk):
         self.DATAS.to_excel(outputfile, index=FALSE)
         print('---------------------------save to file done!---------------------------------')
 
-    def edit(self):
-        item = self.tree.selection()
+    def edit(self, event=None):
 
-        self.tree.set(item, 0, value='helloworld')
+        item = self.tree.selection()
+        
+        # Layout
+        edit_windows = Toplevel(self)
+        scn_width, scn_height = self.maxsize()
+        wm_val = '320x400+%d+%d' % ((scn_width - 320) / 2, (scn_height - 400) / 2)
+        edit_windows.geometry(wm_val)
+        edit_windows.resizable(0, 0)
+        edit_windows.title('编辑学生信息')
+        
+        
+        # 创建标签和输入框
+        frame = Frame(edit_windows)
+        frame.pack(fill=Y)
+        self.entryList=locals()
+        for i, info in enumerate(INFOS):
+            Label(frame, text=info+' : ').grid(row=i, column=0, pady=5)
+            self.entryList[info] = Entry(frame)
+            self.entryList[info].grid(row=i, column=1, pady=5)
+
+
+        # 创建按钮布局
+        frame_btn = Frame(edit_windows)
+        frame_btn.pack(fill=Y)
+        Button(frame_btn, text='确定', command=lambda : update()).grid(row=0, column=0, pady=5)
+        Button(frame_btn, text='清空', command=lambda : clear()).grid(row=0, column=1, pady=5)
+        Button(frame_btn, text='取消', command=lambda : exit()).grid(row=0, column=2, pady=5)
+    
+
+
+        # 将待修改的数据导入输入框(方便修改,不用全部重新输入)
+        values = self.tree.item(item, 'values')
+        for value, info in zip(values, INFOS):
+            self.entryList[info].insert(END, value)
+            print(values)
+            print('--------------input to entry done!------------')
+
+
+        def update():
+            temp = []
+            for i, info in enumerate(INFOS):
+                data = self.entryList[info].get()
+                temp.append(data)
+                self.tree.set(item, i, value=data)
+
+            print('----------------editing data!-----------------')
+            print(temp)
+            print('---------------edit data done!-----------------')
+            exit()
+
+
+        def clear():
+            for info in INFOS:
+                self.entryList[info].delete(0, END)
+
+        def exit():
+            edit_windows.destroy()
+        
+        # item = self.tree.selection()
+        # self.tree.set(item, 0, value='helloworld')
 
 
     def search(self):
         search_windows = Toplevel(self)
-        search_windows.title('查找文本')
+        search_windows.title('搜索全部')
         search_windows.transient(self)
         search_windows.resizable(0, 0)
-
+        scn_width, scn_height = self.maxsize()
+        wm_val = '380x70+%d+%d' % ((scn_width - 380) / 2, (scn_height - 70) / 2)
+        search_windows.geometry(wm_val)
         Label(search_windows, text='查找全部:').grid(row=0, column=0, sticky=E)
         search_entry = Entry(search_windows, width=25)
         search_entry.grid(row=0, column=1, padx=2, pady=20, sticky='we')
@@ -246,6 +343,7 @@ class Demo(Tk):
 
 
         def search_result():
+            result = []
             indexs = self.tree.get_children()
             search_data = search_entry.get()
             print(search_data, type(search_data))
@@ -255,19 +353,33 @@ class Demo(Tk):
                 print(values, end=' ')
                 for value in list(values)[:2]:
                     if search_data in value:
-                        print('Found')
+                        result.append(search_data)
+                        print(result)
                         self.tree.selection_set(index)
                         self.tree.yview_moveto(i/len(indexs))
-                        return
+                        break
                     else:
                         print('No Found')
 
+            if result:
+                return
+            else:
+                messagebox.showinfo(title='提示', message='未找到匹配项')
         # 选择
         # self.tree.selection_set('I001')
         # self.tree.yview_moveto(1)
 
         # 取消选择
         # self.tree.selection_remove('I001')
+
+    def update_to_tree(self):
+        # 删除Treeview中所有元素
+        for index in self.tree.get_children():
+            self.tree.delete(index)
+        # 插入DATAS中的元素到TreeView中
+        for i in self.DATAS.iloc:
+            data = i.tolist()
+            self.tree.insert("", END, values=data)
 
 
     def total(self):
@@ -278,15 +390,15 @@ class Demo(Tk):
         print(self.DATAS)
         print('---------------------------Total calculate done!-----------------------------')
 
-        # 删除Treeview中所有元素
-        for index in self.tree.get_children():
-            self.tree.delete(index)
-        # 插入DATAS中的元素到TreeView中
-        for i in self.DATAS.iloc:
-            data = i.tolist()
-            data = data if len(data) == len(INFOS) else data.append('')
-            self.tree.insert("", END, values=data)
+        # # 删除Treeview中所有元素
+        # for index in self.tree.get_children():
+        #     self.tree.delete(index)
+        # # 插入DATAS中的元素到TreeView中
+        # for i in self.DATAS.iloc:
+        #     data = i.tolist()
+        #     self.tree.insert("", END, values=data)
 
+        self.update_to_tree()
 
 
     def average(self):
@@ -298,6 +410,7 @@ class Demo(Tk):
         print('---------------------------AV-----------------------------')
 
     def sort_as_total(self):
+        self.total()
         self.DATAS.sort_values(by='总分', ascending=False, inplace=True)
         print('--------------------sorting values!----------------')
         print(self.DATAS)
@@ -308,9 +421,15 @@ class Demo(Tk):
         print('--------------------cleaning datas!----------------')
         print(self.DATAS)
         print('--------------------clean datas done!--------------')
+        self.update_to_tree()
+        print('--------------------update to tree done!--------------')
 
         # Text
         self.DATAS.to_excel('text.xlsx', index=False)
+
+    
+    def about(self):
+        print('about')
 
 if "__main__" == __name__:
     app = Demo()
