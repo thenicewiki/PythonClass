@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import filedialog, messagebox
 from tkinter.ttk import Scrollbar, Checkbutton, Label, Button, Treeview
 import os
-from style import ICONS, INFOS
+from style import ICONS, INFOS, ADRS
 
 # 退出Button
 # 按学号排序
@@ -37,7 +37,7 @@ class Demo(Tk):
 
         file_menu = Menu(menu_bar, tearoff=0)
         file_menu.add_command(label='add', accelerator='Ctrl+N', command=self.add)
-        file_menu.add_command(label='Osave_to_file', command=self.save_to_file)
+        file_menu.add_command(label='save_to_file', command=self.save_to_file)
         file_menu.add_command(label='Exit', command=self.edit)
         file_menu.add_command(label='Search', command=self.search)
         file_menu.add_command(label='Total', command=self.total)
@@ -56,9 +56,7 @@ class Demo(Tk):
 
 
 
-
-
-        menu_bar.add_cascade(label='File', menu=file_menu)
+        menu_bar.add_cascade(label='程序中所有函数(测试)', menu=file_menu)
         
         self["menu"] = menu_bar
 
@@ -456,9 +454,8 @@ class Demo(Tk):
 
 
     def about(self):
-        info = '关于'
+        info = 'Github Page: %s \nWeb: %s\n' % (ADRS[0], ADRS[1])
         messagebox.showinfo(title='About', message=info)
-
 
 
     def exit(self):
