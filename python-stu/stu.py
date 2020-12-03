@@ -64,10 +64,10 @@ class Demo(Tk):
 
 
     def _create_shortcut_bar_(self):
-        shortcut_bar = Frame(self, height=25, background='#20b2aa')
+        shortcut_bar = Frame(self, height=25, background='#00CED1')
         shortcut_bar.pack(fill=X)
 
-        right_bar = Frame(self, width=25, background='#E1B14C')
+        right_bar = Frame(self, width=25, background='#FF8C00')
         right_bar.pack(side=RIGHT, fill=Y)
 
         for i, icon in enumerate(ICONS):
@@ -82,7 +82,7 @@ class Demo(Tk):
         scrollBar = Scrollbar(self)
         scrollBar.pack(side=RIGHT, fill=Y)
 
-        self.tree = Treeview(self, show='headings', yscrollcommand=scrollBar.set)#表格
+        self.tree = Treeview(self, show='headings', yscrollcommand=scrollBar.set) # 表格
         index = tuple([str(i) for i in range(len(INFOS))])
         self.tree["columns"]=index
 
@@ -127,6 +127,10 @@ class Demo(Tk):
             self.sort_as_total()
         elif type == "about":
             self.about()
+        elif type == "sort_no":
+            self.sort_as_no()
+        elif type == "exit":
+            self.exit()
 
 
 
@@ -214,7 +218,7 @@ class Demo(Tk):
             input_file = options
         else:
             input_file = filedialog.askopenfilename(
-                filetypes=[("所有文件", "*.*"), ("文本文档", "*.xlsx")])
+                filetypes=[("所有文件", "*.*"), ("Excel文档", "*.xlsx")])
             
             if input_file:
                 print('-----------------成功导入文件:', input_file, type(input_file), '---------------')
@@ -256,8 +260,9 @@ class Demo(Tk):
     
 
     def save_to_file(self):
+        outputfile = filedialog.asksaveasfilename(filetypes=[("所有文件", "*.*"), ("Excel文档", "*.xlsx")])
         self.save_to_DATAS()
-        outputfile = 'new.xlsx'
+        # outputfile = 'new.xlsx'
         self.DATAS.to_excel(outputfile, index=FALSE)
         print('---------------------------save to file done!---------------------------------')
 
@@ -409,6 +414,10 @@ class Demo(Tk):
         print('平均分：', float(av))
         print('---------------------------AV-----------------------------')
 
+        class_grade = '\t总平均分: %.2f' % float(av)
+
+        messagebox.showinfo(title='平均分', message=class_grade)
+
     def sort_as_total(self):
         self.total()
         self.DATAS.sort_values(by='总分', ascending=False, inplace=True)
@@ -428,8 +437,34 @@ class Demo(Tk):
         self.DATAS.to_excel('text.xlsx', index=False)
 
     
+    def sort_as_no(self):
+        self.save_to_DATAS()
+        self.DATAS.sort_values(by='学号', inplace=True)
+        print(self.DATAS)
+        print('-------------------sort as no done!-----------------')
+
+        self.DATAS.reset_index(drop=True, inplace=True)
+        print(self.DATAS)
+        print('--------------------clean data done!-----------------')
+        self.update_to_tree()
+        print('--------------------update to tree done!--------------')
+
+
+        # Text
+        self.DATAS.to_excel('text_sort_no.xlsx', index=False)
+
+
+
     def about(self):
-        print('about')
+        info = '关于'
+        messagebox.showinfo(title='About', message=info)
+
+
+
+    def exit(self):
+        if messagebox.askokcancel("退出?", "确定退出吗?"):
+            self.quit()
+
 
 if "__main__" == __name__:
     app = Demo()
