@@ -27,7 +27,7 @@ class Demo(Tk):
     def _set_windows_(self):
         self.title('学生成绩管理系统')
         scn_width, scn_height = self.maxsize()
-        wm_val = '750x450+%d+%d' % ((scn_width - 750) / 2, (scn_height - 450) / 2)
+        wm_val = '1000x450+%d+%d' % ((scn_width - 800) / 2, (scn_height - 450) / 2)
         self.geometry(wm_val)
         # self.iconbitmap("img/editor.ico")
 
@@ -126,7 +126,7 @@ class Demo(Tk):
         elif type == "sort":
             self.sort_as_total()
         elif type == "about":
-            self.about
+            self.about()
 
 
 
