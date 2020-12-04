@@ -1,13 +1,11 @@
 import pandas as pd
+import numpy as np
 from tkinter import *
 from tkinter import filedialog, messagebox
 from tkinter.ttk import Scrollbar, Checkbutton, Label, Button, Treeview
 import os
 from style import ICONS, INFOS, ADRS
 
-# 退出Button
-# 按学号排序
-# Logo Fun
 
 
 class Demo(Tk):
@@ -27,7 +25,7 @@ class Demo(Tk):
     def _set_windows_(self):
         self.title('学生成绩管理系统')
         scn_width, scn_height = self.maxsize()
-        wm_val = '1000x450+%d+%d' % ((scn_width - 800) / 2, (scn_height - 450) / 2)
+        wm_val = '1200x450+%d+%d' % ((scn_width - 800) / 2, (scn_height - 450) / 2)
         self.geometry(wm_val)
         # self.iconbitmap("img/editor.ico")
 
@@ -50,6 +48,8 @@ class Demo(Tk):
         file_menu.add_command(label='delete_item', command=self.delete_item)
         file_menu.add_command(label='init_demo', command=self.init_demo)
         file_menu.add_command(label='sort_as_total', command=self.sort_as_total)
+        file_menu.add_command(label='average_stu', command=self.average_stu)
+
 
 
 
@@ -118,18 +118,34 @@ class Demo(Tk):
         elif type == "search":
             self.search()
         elif type == "total":
-            self.total()
+            try:
+                self.total()
+            except:
+                messagebox.showinfo(title='警告', message='请检查输入信息')
         elif type == "average":
-            self.average()
+            try:
+                self.average()
+            except:
+                messagebox.showinfo(title='警告', message='请检查输入信息')
         elif type == "sort":
-            self.sort_as_total()
-        elif type == "about":
-            self.about()
+            try:
+                self.sort_as_total()
+            except:
+                messagebox.showinfo(title='警告', message='请检查输入信息')
         elif type == "sort_no":
-            self.sort_as_no()
+            try:
+                self.sort_as_no()
+            except:
+                messagebox.showinfo(title='警告', message='请检查输入信息')
         elif type == "exit":
             self.exit()
-
+        elif type == "average_stu":
+            try:
+                self.average_stu()
+            except:
+                messagebox.showinfo(title='警告', message='请检查输入信息')
+        elif type == "about":
+            self.about()
 
 
     def showline(self, event=None):
@@ -176,7 +192,7 @@ class Demo(Tk):
 
         self.entryList=locals()
 
-        for i, info in enumerate(INFOS):
+        for i, info in enumerate(INFOS[:-2]): # -2 不添加总分 和 平均分
             Label(frame, text=info+' : ').grid(row=i, column=0, pady = 5)
             self.entryList[info] = Entry(frame)
             self.entryList[info].grid(row=i, column=1, pady=5)
@@ -234,11 +250,16 @@ class Demo(Tk):
         print('---------------inputing to TreeView!-----------------')
         for i in df.iloc:
             data = i.tolist()
+
             # 若导入的文件中缺少数据，则缺少的数据用空补上
             for i in range(len(INFOS)-len(data)):
                 data.append('')
             # 打印测试
             print(data)
+
+            # 测试用 把 平均分 和 总分 置空
+            data[-1] = ''
+            data[-2] = ''
             self.tree.insert("", END, values=data)
         print('---------------input to TreeView done!-----------------')
         
@@ -271,7 +292,7 @@ class Demo(Tk):
         # Layout
         edit_windows = Toplevel(self)
         scn_width, scn_height = self.maxsize()
-        wm_val = '320x400+%d+%d' % ((scn_width - 320) / 2, (scn_height - 400) / 2)
+        wm_val = '320x450+%d+%d' % ((scn_width - 320) / 2, (scn_height - 450) / 2)
         edit_windows.geometry(wm_val)
         edit_windows.resizable(0, 0)
         edit_windows.title('编辑学生信息')
@@ -388,7 +409,7 @@ class Demo(Tk):
     def total(self):
         self.save_to_DATAS()
         temp = self.DATAS[['成绩A', '成绩B', '成绩C']].astype('int')
-        self.DATAS['总分'] = temp.sum(axis=1)
+        self.DATAS['总分'] = temp.sum(axis=1) 
         print('---------------------------Total calculate done!-----------------------------')
         print(self.DATAS)
         print('---------------------------Total calculate done!-----------------------------')
@@ -402,6 +423,20 @@ class Demo(Tk):
         #     self.tree.insert("", END, values=data)
 
         self.update_to_tree()
+    
+    
+    def average_stu(self):
+        self.save_to_DATAS()
+        temp = self.DATAS[['成绩A', '成绩B', '成绩C']].astype('int')
+        
+        # round 计算并保留两位小数 round( *, 2 )
+        self.DATAS['平均分'] = round(temp.mean(axis=1), 2)
+        print('---------------------------per average calculate done!-----------------------------')
+        print(self.DATAS)
+        print('---------------------------per average done!-----------------------------')
+
+        self.update_to_tree()
+
 
 
     def average(self):
@@ -437,6 +472,7 @@ class Demo(Tk):
     
     def sort_as_no(self):
         self.save_to_DATAS()
+        self.DATAS['学号'] = self.DATAS[['学号']].astype('int')
         self.DATAS.sort_values(by='学号', inplace=True)
         print(self.DATAS)
         print('-------------------sort as no done!-----------------')
@@ -446,7 +482,6 @@ class Demo(Tk):
         print('--------------------clean data done!-----------------')
         self.update_to_tree()
         print('--------------------update to tree done!--------------')
-
 
         # Text
         self.DATAS.to_excel('text_sort_no.xlsx', index=False)
