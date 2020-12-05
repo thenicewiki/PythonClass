@@ -43,6 +43,7 @@ except:
     tm.showwarning('Warning', '无法计算，请重新输入运算符！')
 ```
 - 利用eval( )方法 直接求解用户输入表达式
+- 利用Python标准异常处理 排除表达式无法计算的情况
 
 
 ## 三、学生信息管理系统
@@ -199,10 +200,10 @@ def openfile(self):
 [![factor0.png](https://s3.ax1x.com/2020/11/28/Dy5YUU.png)](https://imgchr.com/i/Dy5YUU)
 
 
-#### 输入1提示
+##### 输入1提示
 [![factor1.png](https://s3.ax1x.com/2020/11/28/DyHNcQ.png)](https://imgchr.com/i/DyHNcQ)
 
-#### 输入质数提示
+##### 输入质数提示
 [![factor2.png](https://s3.ax1x.com/2020/11/28/DyH69U.png)](https://imgchr.com/i/DyH69U)
 
 #### 核心代码
