@@ -489,8 +489,16 @@ class Demo(Tk):
 
 
     def about(self):
-        info = 'Github Page: %s \nWeb: %s\n' % (ADRS[0], ADRS[1])
-        messagebox.showinfo(title='About', message=info)
+        # info = 'Github Page: %s \nWeb: %s\n' % (ADRS[0], ADRS[1])
+        # messagebox.showinfo(title='About', message=info)
+
+        about_windows = Toplevel(self)
+        about_windows.title('about')
+        for i, icon in enumerate(ICONS):
+            icon_img = PhotoImage(file='img/%s.gif' % icon)
+            Label(about_windows, image=icon_img).pack(fill=BOTH)
+            # btn.pack(fill=Y)
+            self.icon_res.append(icon_img) # 必须有这句话 保存图片
 
 
     def exit(self):

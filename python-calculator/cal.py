@@ -99,7 +99,8 @@ class Demo(Tk):
             self.display.insert(END, key)
         
     def about(self):
-        tm.showinfo('帮助', '本学习项目由  http://pegasu.cn  出品 \n\nGithub: https://github.com/thenicewiki')
+        tm.showinfo('帮助', '本学习项目 By.  Web: http://pegasu.cn  \n\nGithub Page: https://github.com/thenicewiki')
+
 if "__main__" == __name__:
     app = Demo()
     app.mainloop()
