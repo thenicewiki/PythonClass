@@ -52,12 +52,15 @@ class Demo(Tk):
 
 
 
-
-
-
-
         menu_bar.add_cascade(label='程序中所有函数(测试)', menu=file_menu)
         
+        help_menu = Menu(menu_bar, tearoff=0)
+        help_menu.add_command(label='帮助', accelerator='Ctrl+H', command=self.about)
+        help_menu.add_command(label='关于', accelerator='Ctrl+H', command=self.about)
+
+        menu_bar.add_cascade(label='---> 请先阅读帮助中的说明！！！<---' , menu=help_menu)
+
+
         self["menu"] = menu_bar
 
 
@@ -491,15 +494,40 @@ class Demo(Tk):
     def about(self):
         # info = 'Github Page: %s \nWeb: %s\n' % (ADRS[0], ADRS[1])
         # messagebox.showinfo(title='About', message=info)
-
+        help = [
+            '打开Excel文件 其中所有学生信息将导入',
+            '添加一个学生信息 单个添加',
+            '编辑学生信息 选中一个数据后点击 也可直接双击数据编辑',
+            '保存学生信息至Excel文件 文件可用于导入',
+            '刷新数据列表 将窗口内所有学生信息更新至DATAS 用于计算',
+            '删除学生 选中一个或多个（Shift）数据后单击 即可删除该数据 ',
+            '清空所有信息',
+            '查找学生信息 输入姓名 或 学号即可自动遍历查找',
+            '求各个学生的总分',
+            '求所有学生的平均分',
+            '将所有学生按总分排序 会先自动计算总分',
+            '求各个学生的平均分 会先自动线计算总分',
+            '将所有学生按学号排序',
+            '关于帮助',
+            '退出程序'
+        ]
         about_windows = Toplevel(self)
-        about_windows.title('about')
+        about_windows.title('程序使用说明')
+
+        # 容器框 （LabelFrame）
+        group = LabelFrame(about_windows, text="Help", padx=5, pady=5)
+        group.grid(padx=10, pady=10)
+        # w = Label(group, text='本学习项目由  http://pegasu.cn  出品 \n\nGithub: https://github.com/pegasuswiki')
+        # w.pack()
         for i, icon in enumerate(ICONS):
             icon_img = PhotoImage(file='img/%s.gif' % icon)
-            Label(about_windows, image=icon_img).pack(fill=BOTH)
-            # btn.pack(fill=Y)
-            self.icon_res.append(icon_img) # 必须有这句话 保存图片
+            Label(group, image=icon_img).grid(row=i, column=0, stick=NW, padx=5, pady=5)
+            Label(group, text=help[i]).grid(row=i, column=1, stick=W, padx=5, pady=5)
 
+            self.icon_res.append(icon_img) # 必须有 作用: 保存图片
+
+        w = Label(about_windows, text='本学习项目由  http://pegasu.cn  出品 \n\nGithub: https://github.com/pegasuswiki')
+        w.grid(pady=10)
 
     def exit(self):
         if messagebox.askokcancel("退出?", "确定退出吗?"):
